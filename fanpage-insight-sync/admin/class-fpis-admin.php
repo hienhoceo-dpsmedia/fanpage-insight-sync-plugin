@@ -62,41 +62,50 @@ class FPIS_Admin {
 	}
 
 	public function display_sources_page() {
-		$this->handle_source_actions();
-		require_once FPIS_PATH . 'admin/views/sources-page.php';
-	}
+		$step = isset( $_POST['fpis_step'] ) ? (int) $_POST['fpis_step'] : 1;
+		$headers = [];
+		$source_data = [];
 
-	private function handle_source_actions() {
-		if ( ! isset( $_POST['fpis_add_source_submit'] ) && ! isset( $_GET['action'] ) ) return;
-
-		if ( isset( $_POST['fpis_add_source_submit'] ) ) {
-			check_admin_referer( 'fpis_add_source' );
+		if ( $step === 2 ) {
+			check_admin_referer( 'fpis_fetch_headers' );
 			$url = sanitize_text_field( $_POST['sheet_url'] );
 			$parsed = FPIS_Sync::parse_sheet_url( $url );
-			
 			if ( $parsed['sheet_id'] ) {
-				$sources = get_option( 'fpis_sources', [] );
-				$new_source = [
-					'id'         => uniqid(),
+				$source_data = [
 					'label'      => sanitize_text_field( $_POST['label'] ),
 					'sheet_id'   => $parsed['sheet_id'],
 					'gid'        => $parsed['gid'],
 					'header_row' => (int) $_POST['header_row'],
-					'enabled'    => true,
-					'column_map' => [
-						'page_name'    => [ 'header' => 'TÊN FANPAGE',   'unit' => 'raw' ],
-						'link_fanpage' => [ 'header' => 'LINK FANPAGE',  'unit' => 'raw' ],
-						'follow'       => [ 'header' => 'FOLLOW',        'unit' => 'raw' ],
-						'thong_tin'    => [ 'header' => 'THÔNG TIN',     'unit' => 'raw' ],
-						'gioi_tinh'    => [ 'header' => 'GIỚI TÍNH (%)', 'unit' => 'raw' ],
-						'ghi_chu'      => [ 'header' => 'GHI CHÚ',       'unit' => 'raw' ],
-						'tinh_trang'   => [ 'header' => 'TÌNH TRẠNG',    'unit' => 'raw' ],
-					]
 				];
-				$sources[] = $new_source;
-				update_option( 'fpis_sources', $sources );
-				echo '<div class="updated"><p>Source added successfully.</p></div>';
+				$headers = FPIS_Sync::get_csv_headers( $source_data['sheet_id'], $source_data['gid'], $source_data['header_row'] );
 			}
+		}
+
+		if ( isset( $_POST['fpis_save_source'] ) ) {
+			check_admin_referer( 'fpis_save_source' );
+			$sources = get_option( 'fpis_sources', [] );
+			$column_map = [];
+			foreach ( [ 'page_name', 'link_fanpage', 'follow', 'thong_tin', 'gioi_tinh', 'ghi_chu', 'tinh_trang' ] as $field ) {
+				$column_map[ $field ] = [
+					'header' => sanitize_text_field( $_POST['map_' . $field] ),
+					'unit'   => sanitize_text_field( $_POST['unit_' . $field] ?? 'raw' )
+				];
+			}
+
+			$new_source = [
+				'id'         => uniqid(),
+				'label'      => sanitize_text_field( $_POST['label'] ),
+				'sheet_id'   => sanitize_text_field( $_POST['sheet_id'] ),
+				'gid'        => sanitize_text_field( $_POST['gid'] ),
+				'header_row' => (int) $_POST['header_row'],
+				'enabled'    => true,
+				'column_map' => $column_map,
+				'pricing'    => [ 'tiers' => [] ]
+			];
+			$sources[] = $new_source;
+			update_option( 'fpis_sources', $sources );
+			echo '<div class="updated"><p>Source saved successfully.</p></div>';
+			$step = 1;
 		}
 
 		if ( isset( $_GET['action'] ) && $_GET['action'] === 'sync' ) {
@@ -110,6 +119,16 @@ class FPIS_Admin {
 				}
 			}
 		}
+
+		if ( isset( $_GET['action'] ) && $_GET['action'] === 'delete' ) {
+			$id = $_GET['id'];
+			$sources = get_option( 'fpis_sources', [] );
+			$sources = array_filter( $sources, fn($s) => $s['id'] != $id );
+			update_option( 'fpis_sources', $sources );
+			echo '<div class="updated"><p>Source deleted.</p></div>';
+		}
+
+		require_once FPIS_PATH . 'admin/views/sources-page.php';
 	}
 
 	public function display_settings_page() {

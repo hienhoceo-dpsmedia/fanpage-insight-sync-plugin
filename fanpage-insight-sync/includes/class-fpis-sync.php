@@ -121,6 +121,19 @@ class FPIS_Sync {
 		return null;
 	}
 
+	public static function get_csv_headers( string $sheet_id, string $gid, int $header_row ): array {
+		$url = "https://docs.google.com/spreadsheets/d/{$sheet_id}/export?format=csv&gid={$gid}";
+		$response = wp_remote_get( $url );
+		if ( is_wp_error( $response ) ) return [];
+
+		$csv = wp_remote_retrieve_body( $response );
+		$lines = explode( "\n", $csv );
+		$header_line = $lines[ $header_row - 1 ] ?? null;
+		if ( ! $header_line ) return [];
+
+		return str_getcsv( $header_line );
+	}
+
 	public static function parse_sheet_url( string $url ): array {
 		preg_match( '#/spreadsheets/d/([a-zA-Z0-9_-]+)#', $url, $sid );
 		preg_match( '#[#&?]gid=(\d+)#', $url, $gid );
