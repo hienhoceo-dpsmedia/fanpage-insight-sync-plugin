@@ -34,9 +34,10 @@ class FPIS_AI {
 		$prompt = str_replace( '{image_url}', $image_url, $prompt_template );
 
 		$body = [
-			'model'      => $model,
-			'max_tokens' => (int) get_option( 'fpis_ai_max_tokens', 1000 ),
-			'messages'   => [
+			'model'     => $model,
+			'kind'      => 'text',
+			'image_url' => $image_url,
+			'messages'  => [
 				[ 'role' => 'user', 'content' => $prompt ]
 			]
 		];
