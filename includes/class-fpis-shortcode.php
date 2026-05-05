@@ -14,54 +14,103 @@ class FPIS_Shortcode {
 
 		ob_start();
 		?>
-		<div id="fpis-app" class="fpis-container" data-per-page="<?php echo esc_attr( $atts['per_page'] ); ?>">
-			<?php if ( $atts['show_filters'] === 'true' ) : ?>
-				<div class="fpis-filters">
-					<input type="text" id="fpis-search" placeholder="Tìm tên fanpage...">
-					<select id="fpis-gender">
-						<option value="all">Tất cả giới tính</option>
-						<option value="female">Nữ</option>
-						<option value="male">Nam</option>
-						<option value="balanced">Cân bằng</option>
-					</select>
-					<select id="fpis-region">
-						<option value="all">Tất cả khu vực</option>
-						<option value="south">Miền Nam</option>
-						<option value="north">Miền Bắc</option>
-						<option value="central">Miền Trung</option>
-						<option value="nationwide">Toàn quốc</option>
-					</select>
+		<div id="fpis-app" class="fpis-marketplace" data-per-page="<?php echo esc_attr( $atts['per_page'] ); ?>">
+			<!-- Sidebar Navigation & Filters -->
+			<aside class="fpis-sidebar">
+				<div class="fpis-sidebar-header">
+					<div class="fpis-brand">
+						<span class="fpis-logo-icon">💠</span>
+						<span class="fpis-brand-name">Asset Exchange</span>
+					</div>
 				</div>
-			<?php endif; ?>
 
-			<div class="fpis-table-wrapper">
-				<table id="fpis-table">
-					<thead>
-						<tr>
-							<th>Tên trang</th>
-							<th>Followers</th>
-							<th>Khu vực</th>
-							<?php if ( is_user_logged_in() ) : ?>
-								<th>Giới tính</th>
-								<th>Độ tuổi</th>
-								<th>Tình trạng</th>
-							<?php endif; ?>
-							<th>Hành động</th>
-						</tr>
-					</thead>
-					<tbody id="fpis-results">
-						<!-- JS populated -->
-					</tbody>
-				</table>
-			</div>
-			<div id="fpis-pagination"></div>
+				<nav class="fpis-nav">
+					<div class="fpis-nav-group">
+						<label>TÌM KIẾM</label>
+						<div class="fpis-search-box">
+							<input type="text" id="fpis-search" placeholder="Tên fanpage, ID...">
+							<span class="dashicons dashicons-search"></span>
+						</div>
+					</div>
+
+					<div class="fpis-nav-group">
+						<label>BỘ LỌC TÀI SẢN</label>
+						<select id="fpis-gender" class="fpis-sidebar-select">
+							<option value="all">Tất cả giới tính</option>
+							<option value="female">Cộng đồng Nữ</option>
+							<option value="male">Cộng đồng Nam</option>
+							<option value="balanced">Cân bằng</option>
+						</select>
+
+						<select id="fpis-region" class="fpis-sidebar-select">
+							<option value="all">Mọi khu vực</option>
+							<option value="south">Miền Nam</option>
+							<option value="north">Miền Bắc</option>
+							<option value="central">Miền Trung</option>
+							<option value="nationwide">Toàn quốc</option>
+						</select>
+						
+						<select id="fpis-platform" class="fpis-sidebar-select">
+							<option value="all">Tất cả nền tảng</option>
+							<option value="facebook">Facebook</option>
+							<option value="tiktok">TikTok</option>
+						</select>
+					</div>
+
+					<div class="fpis-nav-group">
+						<label>KHOẢNG FOLLOW</label>
+						<div class="fpis-range-inputs">
+							<input type="number" id="fpis-min-follow" placeholder="Min">
+							<span>-</span>
+							<input type="number" id="fpis-max-follow" placeholder="Max">
+						</div>
+					</div>
+				</nav>
+
+				<div class="fpis-sidebar-footer">
+					<a href="<?php echo esc_url( get_option( 'fpis_contact_zalo', '#' ) ); ?>" target="_blank" class="fpis-sidebar-btn">
+						<span class="dashicons dashicons-whatsapp"></span> Hỗ trợ đại lý
+					</a>
+				</div>
+			</aside>
+
+			<!-- Main Content -->
+			<main class="fpis-main">
+				<header class="fpis-dashboard-header">
+					<div class="fpis-header-title">
+						<h1>Sàn Giao Dịch Tài Sản Số</h1>
+						<p>Dữ liệu được kiểm định bởi AI thời gian thực</p>
+					</div>
+					<div class="fpis-header-stats">
+						<div class="fpis-mini-stat">
+							<span class="fpis-label">Hôm nay</span>
+							<span class="fpis-value">+12 Assets</span>
+						</div>
+					</div>
+				</header>
+
+				<div class="fpis-content-area">
+					<div id="fpis-results" class="fpis-grid">
+						<!-- JS populated cards -->
+					</div>
+					
+					<div id="fpis-pagination" class="fpis-pagination-container">
+						<!-- JS populated pagination -->
+					</div>
+				</div>
+			</main>
 		</div>
 
-		<!-- Detail Modal -->
+		<!-- Audit Report Modal (Full Screen Detail) -->
 		<div id="fpis-modal" class="fpis-modal">
-			<div class="fpis-modal-content">
-				<span class="fpis-modal-close">&times;</span>
-				<div id="fpis-modal-body"></div>
+			<div class="fpis-modal-overlay"></div>
+			<div class="fpis-audit-report">
+				<button class="fpis-modal-close">
+					<span class="dashicons dashicons-no-alt"></span> Đóng báo cáo
+				</button>
+				<div id="fpis-modal-body">
+					<!-- JS populated complex layout -->
+				</div>
 			</div>
 		</div>
 		<?php

@@ -85,6 +85,21 @@ class FPIS_DB {
 			$params[] = $args['region'];
 		}
 
+		if ( ! empty( $args['platform'] ) && $args['platform'] !== 'all' ) {
+			$where[] = "platform = %s";
+			$params[] = $args['platform'];
+		}
+
+		if ( ! empty( $args['follow_min'] ) ) {
+			$where[] = "follow_count >= %d";
+			$params[] = (int) $args['follow_min'];
+		}
+
+		if ( ! empty( $args['follow_max'] ) ) {
+			$where[] = "follow_count <= %d";
+			$params[] = (int) $args['follow_max'];
+		}
+
 		if ( ! empty( $where ) ) {
 			$query .= " AND " . implode( " AND ", $where );
 		}
