@@ -1,0 +1,11 @@
+{
+  "model": "gpt",
+  "kind": "text",
+  "image_url": "https://i.imgur.com/MQcf41j.png",
+  "messages": [
+    {
+      "role": "user",
+      "content": "You are a media analysis expert. Analyze the social media insight image at https://i.imgur.com/MQcf41j.png. Return ONLY a single JSON object with this schema: {\"platform\": \"tiktok\", \"total_followers\": 727000, \"gender\": {\"male_pct\": 80, \"female_pct\": 20, \"dominant\": \"male\"}, \"age\": {\"top_group\": \"18-24\", \"distribution\": {}}, \"location\": {\"region_focus\": \"nationwide\"}, \"fit\": {\"suitable_industries\": [\"Gaming\", \"Fashion\"], \"tags\": [\"idol\", \"youth\"]}, \"description\": \"A TikTok idol channel with high male engagement.\"}"
+    }
+  ]
+}
