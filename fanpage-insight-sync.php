@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Fanpage Insight Sync
  * Description: Syncs fanpage insights from Google Sheets and analyzes insight images with AI.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: DPS Media
  * License: GPL2
  * Text Domain: fanpage-insight-sync
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define constants
-define( 'FPIS_VERSION', '1.0.0' );
+define( 'FPIS_VERSION', '1.1.0' );
 define( 'FPIS_PATH', plugin_dir_path( __FILE__ ) );
 define( 'FPIS_URL', plugin_dir_url( __FILE__ ) );
 
